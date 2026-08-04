@@ -5,8 +5,8 @@ import logger from './config/logger';
 import connectDB from './config/db';
 
 dotenv.config()
-//connecting database
-connectDB();
+await connectDB();
+
 //app instance
 const app = express();
 //Middlewares
@@ -16,7 +16,7 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('Notes App Backend is running!');
 });
-//port 
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

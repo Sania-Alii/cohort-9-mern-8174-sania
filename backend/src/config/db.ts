@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import logger from './logger'; // Pino logger 
+import logger from './logger'; 
 
 const connectDB = async () => {
   try {

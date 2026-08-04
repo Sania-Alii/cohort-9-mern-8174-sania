@@ -17,7 +17,7 @@ const logger = pino({
     censor: '[*** MASKED ***]', // Sensitive info will be replaced with this text
   },
   transport: {
-    // To make logs readable and colorize, pino-pretty
+    // To make logs readable and colorize
     target: 'pino-pretty',
     options: {
       colorize: true,
