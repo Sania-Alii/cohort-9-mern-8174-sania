@@ -2,7 +2,11 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import logger from './config/logger';
+import connectDB from './config/db';
+
 dotenv.config()
+//connecting database
+connectDB();
 //app instance
 const app = express();
 //Middlewares

@@ -1,6 +1,6 @@
 import pino from 'pino';
 
-// Enterprise Security Standard: Sensitive data ko logs mein leak hone se bachana
+// Security Standard
 const redactedPaths = [
   'req.headers.authorization',
   'req.headers.cookie',
@@ -14,15 +14,15 @@ const logger = pino({
   level: process.env.LOG_LEVEL || 'info',
   redact: {
     paths: redactedPaths,
-    censor: '[*** MASKED ***]', // Sensitive info is text se replace ho jayegi
+    censor: '[*** MASKED ***]', // Sensitive info will be replaced with this text
   },
   transport: {
-    // Development environment mein logs ko readable aur colorize banane ke liye pino-pretty
+    // To make logs readable and colorize, pino-pretty
     target: 'pino-pretty',
     options: {
       colorize: true,
       translateTime: 'SYS:yyyy-mm-dd HH:MM:ss',
-      ignore: 'pid,hostname', // Terminal ko clean rakhne ke liye extra info hide kar di hai
+      ignore: 'pid,hostname', // hide extra info to keep terminal clean
     },
   },
 });
