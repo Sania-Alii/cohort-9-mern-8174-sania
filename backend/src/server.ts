@@ -19,7 +19,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Root test route f
+// Root test route
 app.get('/', (req, res) => {
   res.send('Notes App Backend is running!');
 });
