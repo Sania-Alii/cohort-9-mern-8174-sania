@@ -40,12 +40,9 @@ userSchema.pre('save', async function(next) {
 });
 
 // Check pswd during login
-userSchema.methods.matchPassword = async function(enteredPassword: string) {
-  try {
-    return await bcrypt.compare(enteredPassword, this.password);
-  } catch (error) {
-    return false;
-  }
+
+ userSchema.methods.matchPassword = function(enteredPassword: string): Promise<boolean> {
+  return bcrypt.compare(enteredPassword, this.password);
 };
   
 const User = mongoose.model<IUser>('User', userSchema);
