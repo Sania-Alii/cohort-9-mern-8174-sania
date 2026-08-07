@@ -64,7 +64,12 @@ if (!name || !email || !password) {
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
-
+// Runtime validation 
+    if (!email || !password) {
+      res.status(400).json({ message: 'Please provide both email and password' });
+      return;
+    }
+    
     const user = await User.findOne({ email });
 
     // matchPassword method from User model 
