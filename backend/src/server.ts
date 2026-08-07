@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import mongoose from 'mongoose';
-import logger from './utils/logger';
+import logger from './config/logger';
 import connectDB from './config/db';
 import authRoutes from './routes/authRoutes';
 import errorHandler from './middlewares/errorHandler';
