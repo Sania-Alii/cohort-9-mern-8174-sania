@@ -39,21 +39,8 @@ app.use('/api/auth', authRoutes);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI as string;
 
-// Database Connection and Server Start
-if (MONGO_URI) {
-  mongoose.connect(MONGO_URI)
-    .then(() => {
-      logger.info('MongoDB connection successful');
-      
-      app.listen(PORT, () => {
-        logger.info(`Server is running on port ${PORT}`);
-      });
-    })
-    .catch((error) => {
-      logger.error(`MongoDB connection error: ${error.message}`);
-    });
-} else {
-  logger.error('MONGO_URI is not defined in the .env file!');
-}
+// Start Express Server
+app.listen(PORT, () => {
+  logger.info('Server is running on port ${PORT}');
+});
