@@ -1,5 +1,5 @@
+import 'dotenv/config';
 import express from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import logger from './config/logger';
@@ -11,9 +11,9 @@ import helmet from 'helmet';
 // Load variables from .env file
 dotenv.config();
 
-// Connect Database 
-connectDB();
+await connectDB();
 
+//App instance
 const app = express();
 // Security headers
 app.use(helmet());
@@ -27,13 +27,13 @@ app.get('/', (req, res) => {
   res.send('Notes App Backend is running!');
 });
 
+// Auth routes connected here 
+app.use('/api/auth', authRoutes);
+
 // Health check route 
 app.get('/health', (req, res) => {
   res.status(200).json({ message: 'Server is running perfectly' });
 });
-
-// Auth routes connected here 
-app.use('/api/auth', authRoutes);
 
 // Global error handling middleware 
 app.use(errorHandler);
