@@ -22,8 +22,8 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-// Root test route
-app.get('/', (req, res) => {
+// Root route
+app.get('/', (_req: Request, res: Response) => {
   res.send('Notes App Backend is running!');
 });
 
@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 
 // Health check route 
-app.get('/health', (req, res) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.status(200).json({ message: 'Server is running perfectly' });
 });
 
