@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
-import logger from '../utils/logger';
+import logger from '../config/logger';
 
 // Generate token
 const generateToken = (id: string) => {
