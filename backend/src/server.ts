@@ -45,7 +45,16 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-// Start Express Server
-app.listen(PORT, () => {
+// Start Express Server with error handling
+const server = app.listen(PORT, () => {
   logger.info(`Server is running on port ${PORT}`);
+});
+
+server.on('error', (error: NodeJS.ErrnoException) => {
+  if (error.code === 'EADDRINUSE') {
+    logger.error(`Port ${PORT} is already in use`);
+  } else {
+    logger.error(`Server startup error: ${error.message}`);
+  }
+  process.exit(1);
 });
