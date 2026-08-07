@@ -6,11 +6,11 @@ const errorHandler = (err: any, req: Request, res: Response, next: NextFunction)
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   
   // Log the error details using Pino
-  logger.error(`Error: ${err.message} - Method: ${req.method} - URL: ${req.originalUrl}`);
+  logger.error({ error: err.message, url: req.originalUrl }, 'API Error');
 
   res.status(statusCode).json({
-    message: err.message,
-    // Only show the stack trace in development mode
+    message: process.env.NODE_ENV === 'production' ? 'Internal Server Error' : err.message,
+    // show message in production
     stack: process.env.NODE_ENV === 'production' ? null : err.stack,
   });
 };

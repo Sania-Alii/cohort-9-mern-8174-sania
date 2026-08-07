@@ -6,6 +6,7 @@ import logger from './utils/logger';
 import connectDB from './config/db';
 import authRoutes from './routes/authRoutes';
 import errorHandler from './middlewares/errorHandler';
+import helmet from 'helmet';
 
 // Load variables from .env file
 dotenv.config();
@@ -14,6 +15,8 @@ dotenv.config();
 connectDB();
 
 const app = express();
+// Security headers
+app.use(helmet());
 
 // Middlewares
 app.use(cors());
