@@ -8,8 +8,12 @@ import authRoutes from './routes/authRoutes';
 import errorHandler from './middlewares/errorHandler';
 import helmet from 'helmet';
 
-await connectDB();
-
+try {
+  await connectDB();
+} catch (error) {
+  logger.error({ err: error }, 'Database startup failed');
+  process.exit(1);
+  }
 // App instance
 const app = express();
 
@@ -35,7 +39,7 @@ app.get('/health', (_req: Request, res: Response) => {
 
 // Handle 404 Not Found requests
 app.use((_req: Request, _res: Response, next: NextFunction) => {
-  const error = new Error(`Not Found - ${_req.originalUrl}`);
+  const error = new Error('Not Found');
   _res.status(404);
   next(error);
 });
