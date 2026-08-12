@@ -5,15 +5,21 @@ import mongoose from 'mongoose';
 import logger from './config/logger';
 import connectDB from './config/db';
 import authRoutes from './routes/authRoutes';
+import noteRoutes from './routes/noteRoutes';
 import errorHandler from './middlewares/errorHandler';
 import helmet from 'helmet';
 
-try {
-  await connectDB();
-} catch (error) {
-  logger.error({ err: error }, 'Database startup failed');
-  process.exit(1);
+const startDB = async () => {
+  try {
+    await connectDB();
+  } catch (error) {
+    logger.error({ err: error }, 'Database startup failed');
+    process.exit(1);
   }
+};
+
+startDB();
+
 // App instance
 const app = express();
 
@@ -31,6 +37,9 @@ app.get('/', (_req: Request, res: Response) => {
 
 // Auth routes connected here 
 app.use('/api/auth', authRoutes);
+
+// Notes routes connected here
+app.use('/api/notes', noteRoutes);
 
 // Health check route 
 app.get('/health', (_req: Request, res: Response) => {
