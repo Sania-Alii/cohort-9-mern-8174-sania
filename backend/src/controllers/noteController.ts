@@ -1,15 +1,13 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import Note from '../models/Note';
 import logger from '../config/logger';
+import { AuthRequest } from '../middlewares/authMiddleware'; 
 
 // Create a new note
-export const createNote = async (req: Request, res: Response, next: NextFunction) => {
+export const createNote = async (req: AuthRequest, res: Response, next: NextFunction) => { 
   try {
     const { title, content } = req.body;
-    
-    // getting user id from auth middleware
-    // using 'any' for now to avoid TS error
-    const userId = (req as any).user?.id;
+    const userId = req.user?.id;
 
     // validation check
     if (!title || !content) {
@@ -19,14 +17,12 @@ export const createNote = async (req: Request, res: Response, next: NextFunction
       });
     }
 
-    // create the note in db
     const newNote = await Note.create({
       title: title,
       content: content,
       user: userId
     });
 
-    // log the activity for tracking
     logger.info(`New note created by user: ${userId}`);
 
     res.status(201).json({
@@ -36,14 +32,14 @@ export const createNote = async (req: Request, res: Response, next: NextFunction
 
   } catch (error) {
     logger.error('Error in createNote:', error);
-    next(error); // sending to global error handler
+    next(error);
   }
 };
 
 // Get all notes for logged in user 
-export const getNotes = async (req: Request, res: Response, next: NextFunction) => {
+export const getNotes = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    const userId = (req as any).user?.id;
+    const userId = req.user?.id;
     const searchQuery = req.query.search as string;
     
     let queryObj: any = { user: userId };
@@ -71,10 +67,10 @@ export const getNotes = async (req: Request, res: Response, next: NextFunction) 
 };
 
 // Update an existing note
-export const updateNote = async (req: Request, res: Response, next: NextFunction) => {
+export const updateNote = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const noteId = req.params.id;
-    const userId = (req as any).user?.id;
+    const userId = req.user?.id;
 
     let noteToUpdate = await Note.findById(noteId);
 
@@ -83,16 +79,18 @@ export const updateNote = async (req: Request, res: Response, next: NextFunction
       return res.status(404).json({ success: false, message: 'Note not found' });
     }
 
-    // strict check: user can only edit their own notes
+    // user can only edit their own notes
     if (noteToUpdate.user.toString() !== userId) {
       logger.warn(`Unauthorized edit attempt by user ${userId} on note ${noteId}`);
       return res.status(403).json({ success: false, message: 'Not authorized to update this note' });
     }
 
+    const { title, content } = req.body;
+
     // update the fields
     noteToUpdate = await Note.findByIdAndUpdate(
       noteId, 
-      req.body, 
+      { title, content }, 
       { new: true, runValidators: true }
     );
 
@@ -109,10 +107,10 @@ export const updateNote = async (req: Request, res: Response, next: NextFunction
 };
 
 // Delete a note
-export const deleteNote = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteNote = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const noteId = req.params.id;
-    const userId = (req as any).user?.id;
+    const userId = req.user?.id;
 
     const noteToDelete = await Note.findById(noteId);
 

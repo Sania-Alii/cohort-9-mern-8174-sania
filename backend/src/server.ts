@@ -9,21 +9,7 @@ import noteRoutes from './routes/noteRoutes';
 import errorHandler from './middlewares/errorHandler';
 import helmet from 'helmet';
 
-const startDB = async () => {
-  try {
-    await connectDB();
-  } catch (error) {
-    logger.error({ err: error }, 'Database startup failed');
-    process.exit(1);
-  }
-};
-
-startDB();
-
-// App instance
 const app = express();
-
-// Security headers
 app.use(helmet());
 
 // Middlewares
@@ -47,9 +33,9 @@ app.get('/health', (_req: Request, res: Response) => {
 });
 
 // Handle 404 Not Found requests
-app.use((_req: Request, _res: Response, next: NextFunction) => {
+app.use((_req: Request, res: Response, next: NextFunction) => {
   const error = new Error('Not Found');
-  _res.status(404);
+  res.status(404);
   next(error);
 });
 
@@ -58,16 +44,23 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-// Start Express Server with error handling
-const server = app.listen(PORT, () => {
-  logger.info(`Server is running on port ${PORT}`);
-});
 
-server.on('error', (error: NodeJS.ErrnoException) => {
-  if (error.code === 'EADDRINUSE') {
-    logger.error(`Port ${PORT} is already in use`);
-  } else {
-    logger.error(`Server startup error: ${error.message}`);
-  }
-  process.exit(1);
-});
+const startServer = async (): Promise<void> => {
+  // Wait for database to connect FIRST
+  await connectDB();
+  // Only start listening AFTER database is successfully connected
+  const server = app.listen(PORT, () => {
+    logger.info(`Server is running on port ${PORT}`);
+  });
+
+  server.on('error', (error: NodeJS.ErrnoException) => {
+    if (error.code === 'EADDRINUSE') {
+      logger.error(`Port ${PORT} is already in use`);
+    } else {
+      logger.error(`Server startup error: ${error.message}`);
+    }
+    process.exit(1);
+  });
+};
+
+startServer();
