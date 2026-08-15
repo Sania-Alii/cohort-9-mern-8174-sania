@@ -4,7 +4,8 @@
   "description": "Notes App Backend",
   "main": "dist/server.js",
   "scripts": {
-    "start": "node dist/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
     "dev": "nodemon --exec tsx src/server.ts"
   },
   "keywords": [],
