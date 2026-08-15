@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "Notes App Backend",
   "main": "dist/server.js",
-  "scripts": {
-    "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "nodemon --exec tsx src/server.ts"
-  },
+ "scripts": {
+  "start": "node dist/server.js",
+  "dev": "nodemon src/server.ts",
+  "test": "mocha --require tsx \"src/tests/**/*.test.ts\" --exit --timeout 10000"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -25,12 +25,20 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/chai": "^5.2.3",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^26.1.2",
+    "@types/supertest": "^7.2.1",
+    "chai": "^6.2.2",
+    "mocha": "^11.8.0",
     "nodemon": "^3.1.14",
-    "tsx": "^4.23.5",
+    "supertest": "^7.2.2",
+    "ts-mocha": "^11.1.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.23.12",
     "typescript": "^7.0.2"
   }
 }

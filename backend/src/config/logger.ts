@@ -1,6 +1,6 @@
 import pino from 'pino';
 
-// Security Standard
+// hiding sensitive stuff from logs so it doesn't print in console
 const redactedPaths = [
   'req.headers.authorization',
   'req.headers.cookie',
@@ -14,10 +14,10 @@ const logger = pino({
   level: process.env.LOG_LEVEL || 'info',
   redact: {
     paths: redactedPaths,
-    censor: '[*** MASKED ***]', // Sensitive info will be replaced with this text
+    censor: '***',
   },
   transport: {
-    // To make logs readable and colorize
+    // formatting To read easily
     target: 'pino-pretty',
     options: {
       colorize: true,
