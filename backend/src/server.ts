@@ -67,5 +67,8 @@ const startServer = async (): Promise<void> => {
   });
 };
 
-startServer();
+if (process.env.NODE_ENV !== 'test') {
+  startserver();
+}
+
 export default app;

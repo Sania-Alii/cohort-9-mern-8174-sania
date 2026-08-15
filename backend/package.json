@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "Notes App Backend",
   "main": "dist/server.js",
- "scripts": {
+"scripts": {
   "start": "node dist/server.js",
   "dev": "nodemon src/server.ts",
-  "test": "mocha --require tsx \"src/tests/**/*.test.ts\" --exit --timeout 10000"
-},
+  "test": "cross-env NODE_ENV=test mocha --import tsx \"src/tests/**/*.test.ts\" --exit --timeout 10000"
+} ,
   "keywords": [],
   "author": "",
   "license": "ISC",
