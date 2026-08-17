@@ -3,6 +3,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import logger from './config/logger';
+import pinoHttp from 'pino-http';
 import connectDB from './config/db';
 import authRoutes from './routes/authRoutes';
 import noteRoutes from './routes/noteRoutes';
@@ -15,6 +16,9 @@ app.use(helmet());
 // Middlewares
 app.use(cors());
 app.use(express.json());
+
+// log all incoming http requests automatically
+app.use(pinoHttp({ logger }));
 
 // Root route
 app.get('/', (_req: Request, res: Response) => {
@@ -63,4 +67,8 @@ const startServer = async (): Promise<void> => {
   });
 };
 
-startServer();
+if (process.env.NODE_ENV !== 'test') {
+  startserver();
+}
+
+export default app;
