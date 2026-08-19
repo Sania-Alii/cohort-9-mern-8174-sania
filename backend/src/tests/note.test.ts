@@ -9,24 +9,34 @@ describe('Notes API Testing', () => {
   // variables to store token and note id 
   let authToken = '';
   let savedNoteId = '';
+  let testEmail = '';  
+  let testUserId = '';
 
   // setup db and get token before testing notes
-  before(async () => {
+ before(async () => {
     try {
       if (mongoose.connection.readyState === 0) {
         await mongoose.connect(process.env.MONGO_TEST_URI || 'mongodb://127.0.0.1:27017/notes-test-db');
       }
-      
+      // Dynamic email 
+      testEmail = `testuser_${Date.now()}@test.com`;
+
       // creating a dummy user for testing
-      const dummyUser = { name: 'test user', email: 'test123@test.com', password: 'password123' };
-      await request(app).post('/api/auth/register').send(dummyUser);
+      const dummyUser = { name: 'test user', email: testEmail, password: 'password123' };
+      const regRes = await request(app).post('/api/auth/register').send(dummyUser);
       
-      // login to get auth token
+// 3. check register status
+      expect(regRes.status).to.equal(201);
+      testUserId = regRes.body._id;
+
+      // login with new email
       const loginRes = await request(app).post('/api/auth/login').send({
-        email: 'test123@test.com',
+        email: testEmail,
         password: 'password123'
       });
       
+      //check login status
+     expect(loginRes.status).to.equal(200);
       authToken = loginRes.body.token;
     } catch (error) {
       throw error;
@@ -36,15 +46,20 @@ describe('Notes API Testing', () => {
   // cleanup after tests 
   after(async () => {
     try {
-      // delete the dummy user and notes
-      await mongoose.connection.collection('users').deleteOne({ email: 'test123@test.com' });
-      await Note.deleteMany({});
+      // delete the dummy user 
+      await mongoose.connection.collection('users').deleteOne({ email: testEmail });
+      
+      // delete the dummy user notes
+      if (testUserId) {
+        await Note.deleteMany({ user: testUserId }); 
+      }
     } catch (error) {
       throw error;
     } finally {
       await mongoose.disconnect();
     }
   });
+     
 
   // Test 1: Security check
   it('should not allow access to notes without an auth token', async () => {
