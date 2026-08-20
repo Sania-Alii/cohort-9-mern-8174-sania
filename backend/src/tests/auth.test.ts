@@ -72,3 +72,4 @@ describe('Auth API Tests', () => {
       throw error;
     }
   });
+  });
