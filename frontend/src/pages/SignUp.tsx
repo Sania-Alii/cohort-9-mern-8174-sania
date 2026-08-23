@@ -1,8 +1,18 @@
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { AuthContext, AuthUser } from "../context/AuthContext";
+import api from "../api/axios";
+
+interface AuthResponse {
+  _id: string;
+  name: string;
+  email: string;
+  token: string;
+}
 
 const signUpSchema = z.object({
   name: z.string().min(3, { message: "Name must be at least 3 characters" }),
@@ -20,12 +30,47 @@ const SignUp = () => {
   useEffect(() => {
     document.title = "Create Account | NoteFlow";
   }, []);
-  const { register, handleSubmit, formState: { errors } } = useForm<SignUpFormData>({
+
+  const navigate = useNavigate();
+  const auth = useContext(AuthContext);
+  const { register, handleSubmit, setError, formState: { errors } } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
   });
 
-  const onSubmit = (data: SignUpFormData) => {
-    // TODO: Implement backend registration here
+  const onSubmit = async (data: SignUpFormData) => {
+    try {
+      const registerData = {
+        name: data.name,
+        email: data.email,
+        password: data.password
+      };
+
+      const response = await api.post<AuthResponse>('/auth/register', registerData);
+      
+      if (auth) {
+        // save token 
+        const userData: AuthUser = {
+          _id: response.data._id,
+          name: response.data.name,
+          email: response.data.email
+        };
+        auth.login(userData, response.data.token);
+      }
+      
+      navigate('/dashboard');
+    } catch (error: unknown) {
+      console.error("Signup error:", error);
+      
+      let errorMessage = "Registration failed. Please try again.";
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
+      setError("root", {
+        type: "server",
+        message: errorMessage
+      });
+    }
   };
 
   return (
@@ -39,7 +84,7 @@ const SignUp = () => {
           <p className="text-slate-500 text-sm mt-1 font-medium">Join NoteFlow today</p>
         </div>
         
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
           <div>
             <label htmlFor="name" className="block text-sm font-bold text-slate-700 mb-1">Full Name</label>
             <input
@@ -88,6 +133,13 @@ const SignUp = () => {
             {errors.confirmPassword && <p className="text-rose-500 text-xs mt-1 font-medium">{errors.confirmPassword.message}</p>}
           </div>
 
+          {/* backend error message */}
+          {errors.root && (
+            <p className="text-rose-500 text-sm font-bold text-center mt-2">
+              {errors.root.message}
+            </p>
+          )}
+
           <button
             type="submit"
             className="w-full py-3.5 px-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold rounded-xl transition-all shadow-md hover:shadow-blue-500/30 mt-2"
@@ -105,3 +157,6 @@ const SignUp = () => {
 };
 
 export default SignUp;
+
+
+

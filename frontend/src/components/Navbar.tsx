@@ -1,7 +1,31 @@
-import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
+import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  // get user details from context
+  const user = auth?.user;
+  
+  const getInitials = (name: string) => {
+    if (!name) return "U"; // default to 'U' for User
+    const parts = name.split(" ");
+    if (parts.length > 1) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name[0].toUpperCase();
+  };
+
+  const handleLogout = () => {
+    if (auth) {
+      auth.logout();  
+      navigate('/login'); 
+    }
+  };
+
   return (
     <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,19 +47,21 @@ const Navbar = () => {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3 border-r border-gray-200 pr-4">
               <div className="h-8 w-8 rounded-full bg-[#D6EFFF] flex items-center justify-center text-[#004A77] font-bold text-sm">
-                SA
+                {getInitials(user?.name)}
               </div>
-              <span className="text-sm font-bold text-gray-700">Sania Ali</span>
+              <span className="text-sm font-bold text-gray-700">
+                {user?.name || "User"}
+              </span>
             </div>
             
-            <Link 
-              to="/login" 
+            <button 
+              onClick={handleLogout}
               aria-label="Logout"
               className="flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-red-600 transition-colors"
             >
               <LogOut className="h-4 w-4" />
               <span className="hidden sm:inline">Logout</span>
-            </Link>
+            </button>
           </div>
 
         </div>
@@ -45,3 +71,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
