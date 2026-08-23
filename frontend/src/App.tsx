@@ -32,6 +32,14 @@ function App() {
             </ProtectedRoute>
           } 
         /> 
+        <Route 
+          path="/edit-note/:id" 
+          element={
+            <ProtectedRoute>
+              <CreateNote />
+            </ProtectedRoute>
+          } 
+        /> 
 
       </Routes>
     </BrowserRouter>

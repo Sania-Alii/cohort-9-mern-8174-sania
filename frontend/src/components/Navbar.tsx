@@ -10,8 +10,9 @@ const Navbar = () => {
   // get user details from context
   const user = auth?.user;
   
-  const getInitials = (name: string) => {
-    if (!name) return "U"; // default to 'U' for User
+   const getInitials = (name: string | undefined) => {
+  if (!name) return "U";
+
     const parts = name.split(" ");
     if (parts.length > 1) {
       return (parts[0][0] + parts[1][0]).toUpperCase();
@@ -21,31 +22,30 @@ const Navbar = () => {
 
   const handleLogout = () => {
     if (auth) {
-      auth.logout();  
+      auth.logout(); 
       navigate('/login'); 
     }
   };
 
   return (
-    <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
+    <nav className="bg-[#FAF6F0]/90 backdrop-blur-md border-b border-[#E3D4C6] sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           
-          {/* App Logo & Name */}
+          {/* Logo & Name */}
           <div className="flex items-center gap-2.5">
             <img 
               src="/logo.png" 
               alt="NoteFlow Logo" 
               className="h-10 w-10 object-contain drop-shadow-sm hover:scale-105 transition-transform duration-300"
             />
-            <h1 className="text-2xl font-extrabold text-[#004A77] tracking-tight">
+            <h1 className="text-2xl font-extrabold text-blue-600 tracking-tight">
               NoteFlow
             </h1>
           </div>
           
-          {/* User Profile & Actions */}
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3 border-r border-gray-200 pr-4">
+            <div className="flex items-center gap-3 border-r border-gray-300/60 pr-4">
               <div className="h-8 w-8 rounded-full bg-[#D6EFFF] flex items-center justify-center text-[#004A77] font-bold text-sm">
                 {getInitials(user?.name)}
               </div>
@@ -71,4 +71,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
