@@ -12,6 +12,11 @@ interface Note {
   createdAt: string;
 }
 
+interface NotesResponse {
+  success: boolean;
+  data: Note[];
+}
+
 const Dashboard = () => {
   
   const [notes, setNotes] = useState<Note[]>([]);
@@ -32,12 +37,12 @@ const Dashboard = () => {
   const fetchNotes = async () => {
     try {
       setLoading(true);
-      const response = await api.get("/notes");
+      const response = await api.get<NotesResponse>("/notes");
       
       if (response.data && response.data.success) {
         setNotes(response.data.data);
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Error loading notes:", err);
       setError("Failed to load notes. Please try again.");
     } finally {
