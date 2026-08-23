@@ -18,7 +18,7 @@ const CreateNote = () => {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Saving Note:", { title, category, priority, content });
+    // TODO: Implement backend save note logic here
     navigate("/dashboard");
   };
 
@@ -32,6 +32,7 @@ const CreateNote = () => {
         <div className="flex items-center gap-4 mb-8">
           <Link 
             to="/dashboard" 
+            aria-label="Back to dashboard"
             className="p-3 bg-white rounded-full shadow-sm text-slate-600 hover:text-blue-600 transition-colors border border-gray-100 hover:shadow-md"
           >
             <ArrowLeft className="h-5 w-5" />
@@ -43,8 +44,9 @@ const CreateNote = () => {
         <form onSubmit={handleSave} className="bg-white rounded-[2rem] shadow-xl shadow-blue-900/5 border border-gray-100 p-8 sm:p-10">
           
           <div className="mb-8">
-            <label className="block text-sm font-bold text-slate-700 mb-2">Note Title</label>
+            <label htmlFor="title" className="block text-sm font-bold text-slate-700 mb-2">Note Title</label>
             <input
+              id="title"
               type="text"
               required
               value={title}
@@ -56,8 +58,9 @@ const CreateNote = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Category</label>
+              <label htmlFor="category" className="block text-sm font-bold text-slate-700 mb-2">Category</label>
               <select 
+                id="category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 className="w-full px-5 py-3.5 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100 bg-[#F8FAFC] focus:bg-white transition-all text-slate-800"
@@ -70,8 +73,9 @@ const CreateNote = () => {
             </div>
             
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Priority</label>
+              <label htmlFor="priority" className="block text-sm font-bold text-slate-700 mb-2">Priority</label>
               <select 
+                id="priority"
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
                 className="w-full px-5 py-3.5 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100 bg-[#F8FAFC] focus:bg-white transition-all text-slate-800"

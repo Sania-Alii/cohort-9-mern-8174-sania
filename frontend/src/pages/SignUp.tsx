@@ -25,7 +25,7 @@ const SignUp = () => {
   });
 
   const onSubmit = (data: SignUpFormData) => {
-    console.log("Sign Up Data:", data);
+    // TODO: Implement backend registration here
   };
 
   return (
@@ -41,8 +41,9 @@ const SignUp = () => {
         
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-1">Full Name</label>
+            <label htmlFor="name" className="block text-sm font-bold text-slate-700 mb-1">Full Name</label>
             <input
+              id="name"
               type="text"
               {...register("name")}
               className="w-full px-5 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100 bg-[#F8FAFC] focus:bg-white transition-all text-slate-800"
@@ -52,8 +53,9 @@ const SignUp = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-1">Email Address</label>
+            <label htmlFor="email" className="block text-sm font-bold text-slate-700 mb-1">Email Address</label>
             <input
+              id="email"
               type="email"
               {...register("email")}
               className="w-full px-5 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100 bg-[#F8FAFC] focus:bg-white transition-all text-slate-800"
@@ -63,8 +65,9 @@ const SignUp = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-1">Password</label>
+            <label htmlFor="password" className="block text-sm font-bold text-slate-700 mb-1">Password</label>
             <input
+              id="password"
               type="password"
               {...register("password")}
               className="w-full px-5 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100 bg-[#F8FAFC] focus:bg-white transition-all text-slate-800"
@@ -74,8 +77,9 @@ const SignUp = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-1">Confirm Password</label>
+            <label htmlFor="confirmPassword" className="block text-sm font-bold text-slate-700 mb-1">Confirm Password</label>
             <input
+              id="confirmPassword"
               type="password"
               {...register("confirmPassword")}
               className="w-full px-5 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100 bg-[#F8FAFC] focus:bg-white transition-all text-slate-800"

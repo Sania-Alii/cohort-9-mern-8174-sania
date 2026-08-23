@@ -82,7 +82,7 @@ const Dashboard = () => {
                 <h3 className={`text-xl font-bold ${note.textColor}`}>
                   {note.title}
                 </h3>
-                <button className={`${note.textColor} opacity-50 hover:opacity-100 transition-opacity`}>
+                <button aria-label="Open note actions" className={`${note.textColor} opacity-50 hover:opacity-100 transition-opacity`}>
                   <MoreVertical className="h-5 w-5" />
                 </button>
               </div>
@@ -107,6 +107,7 @@ const Dashboard = () => {
         {/* Mobile Floating Action Button */}
         <Link 
           to="/create-note" 
+          aria-label="Create new note"
           className="sm:hidden fixed bottom-8 right-8 bg-blue-600 text-white p-4 rounded-full shadow-2xl hover:scale-105 transition-transform z-50"
         >
           <Plus className="h-7 w-7" />

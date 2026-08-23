@@ -30,6 +30,7 @@ const Navbar = () => {
             
             <Link 
               to="/login" 
+              aria-label="Logout"
               className="flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-red-600 transition-colors"
             >
               <LogOut className="h-4 w-4" />
