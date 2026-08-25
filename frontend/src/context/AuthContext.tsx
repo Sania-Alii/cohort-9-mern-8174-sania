@@ -1,4 +1,5 @@
-import { createContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useState, useEffect } from 'react';
+import type { ReactNode } from 'react';
 
 export interface AuthUser {
   _id: string;
@@ -27,10 +28,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const savedToken = localStorage.getItem('token');
 
     if (savedUser && savedToken) {
-      setUser(JSON.parse(savedUser));
-      setToken(savedToken);
+      try {
+        setUser(JSON.parse(savedUser));
+        setToken(savedToken);
+      } catch {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+      }
     }
-    
     setIsInitialized(true);
   }, []);
 
