@@ -15,7 +15,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 
-        {/* Protected Routes - only logged in users can access */}
+        {/* Protected Routes, only logged in users can access */}
         <Route 
           path="/dashboard" 
           element={

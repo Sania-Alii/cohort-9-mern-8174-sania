@@ -1,17 +1,25 @@
 import { createContext, useState, useEffect, ReactNode } from 'react';
 
+export interface AuthUser {
+  _id: string;
+  name: string;
+  email: string;
+}
+
 interface AuthContextType {
-  user: any;
+  user: AuthUser | null;
   token: string | null;
-  login: (userData: any, userToken: string) => void;
+  isInitialized: boolean;
+  login: (userData: AuthUser, userToken: string) => void;
   logout: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
   // check if user is already logged in 
   useEffect(() => {
@@ -22,10 +30,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(JSON.parse(savedUser));
       setToken(savedToken);
     }
+    
+    setIsInitialized(true);
   }, []);
 
   // run after getting a successful login response from API
-  const login = (userData: any, userToken: string) => {
+  const login = (userData: AuthUser, userToken: string) => {
     setUser(userData);
     setToken(userToken);
     
@@ -42,7 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, isInitialized, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
