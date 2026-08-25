@@ -3,6 +3,7 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
 import CreateNote from './pages/CreateNote'; 
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -14,9 +15,23 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 
-        {/* Main Route */}
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/create-note" element={<CreateNote />} /> 
+        {/* Protected Routes - only logged in users can access */}
+        <Route 
+          path="/dashboard" 
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/create-note" 
+          element={
+            <ProtectedRoute>
+              <CreateNote />
+            </ProtectedRoute>
+          } 
+        /> 
 
       </Routes>
     </BrowserRouter>
