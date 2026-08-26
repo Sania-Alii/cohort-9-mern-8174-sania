@@ -41,7 +41,6 @@ const Login = () => {
       
       // if successful, save user data 
       if (auth) {
-
         const userData: AuthUser = {
           _id: response.data._id,
           name: response.data.name,
