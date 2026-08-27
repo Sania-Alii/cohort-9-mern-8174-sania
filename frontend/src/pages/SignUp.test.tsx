@@ -74,7 +74,6 @@ test('calls signup api with correct data', async () => {
     </BrowserRouter>
   );
 
-  // fill  input fields with test data
   fireEvent.change(screen.getByLabelText(/Full Name/i), {
     target: { value: 'Sania Ali' },
   });

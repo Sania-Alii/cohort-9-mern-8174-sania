@@ -6,7 +6,6 @@ import api from '../api/axios';
 jest.mock('../api/axios');
 
 test('shows loading text initially', () => {
-  // api waits  to check loading state
   (api.get as jest.Mock).mockImplementation(() => new Promise(() => {}));
   
   render(
