@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import JoditEditor from "jodit-react";
 import { ArrowLeft, Save } from "lucide-react";
 import Navbar from "../components/Navbar";
+import api from "../api/axios";
 
 const CreateNote = () => {
   useEffect(() => {
@@ -16,10 +17,20 @@ const CreateNote = () => {
   const [priority, setPriority] = useState("Normal");
   const [content, setContent] = useState("");
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement backend save note logic here
-    navigate("/dashboard");
+    try {
+      await api.post('/notes', {
+        title,
+        category,
+        priority,
+        content
+      });
+      navigate("/dashboard");
+    } catch (error: any) {
+      console.error("Failed to save note:", error);
+      alert(error.response?.data?.message || "Failed to save note. Please try again.");
+    }
   };
 
   return (
@@ -114,3 +125,4 @@ const CreateNote = () => {
 };
 
 export default CreateNote;
+

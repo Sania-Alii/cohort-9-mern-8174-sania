@@ -1,8 +1,18 @@
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { AuthContext, AuthUser } from "../context/AuthContext";
+import api from "../api/axios";
+
+interface AuthResponse {
+  _id: string;
+  name: string;
+  email: string;
+  token: string;
+}
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -12,13 +22,46 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 const Login = () => {
-  
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
+  useEffect(() => {
+    document.title = "Log In | NoteFlow";
+  }, []);
+
+  const navigate = useNavigate();
+  const auth = useContext(AuthContext);
+
+  // added setError
+  const { register, handleSubmit, setError, formState: { errors } } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginFormData) => {
-    // TODO: Implement backend authentication here
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      const response = await api.post<AuthResponse>('/auth/login', data);
+      
+      if (auth) {
+
+        const userData: AuthUser = {
+          _id: response.data._id,
+          name: response.data.name,
+          email: response.data.email
+        };
+        auth.login(userData, response.data.token);
+      }
+      
+      navigate('/dashboard');
+    } catch (error: unknown) {
+      console.error("Login error:", error);
+      
+      let errorMessage = "Invalid email or password";
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
+      setError("root", {
+        type: "server",
+        message: errorMessage
+      });
+    }
   };
 
   return (
@@ -32,7 +75,7 @@ const Login = () => {
           <p className="text-slate-500 text-sm mt-2 font-medium">Log in to your NoteFlow account</p>
         </div>
         
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
           <div>
             <label htmlFor="email" className="block text-sm font-bold text-slate-700 mb-1.5">Email Address</label>
             <input
@@ -57,6 +100,13 @@ const Login = () => {
             {errors.password && <p className="text-rose-500 text-xs mt-1.5 font-medium">{errors.password.message}</p>}
           </div>
 
+          {/* backend error message */}
+          {errors.root && (
+            <p className="text-rose-500 text-sm font-bold text-center mt-2">
+              {errors.root.message}
+            </p>
+          )}
+
           <button
             type="submit"
             className="w-full py-4 px-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold rounded-xl transition-all shadow-md hover:shadow-blue-500/30 mt-4"
@@ -74,3 +124,4 @@ const Login = () => {
 };
 
 export default Login;
+
