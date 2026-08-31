@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+/* List Fix for Jodit Editor */
+.jodit-wysiwyg ul {
+  list-style-type: disc;
+  padding-left: 2.5rem;
+}
+
+.jodit-wysiwyg ol {
+  list-style-type: decimal;
+  padding-left: 2.5rem;
+}
